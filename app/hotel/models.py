@@ -1,3 +1,9 @@
 from django.db import models
 
-# Create your models here.
+
+class RodzajeSprzetu(models.Model):
+    # song title
+    nazwa = models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.nazwa
