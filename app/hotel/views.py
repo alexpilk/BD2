@@ -1,8 +1,8 @@
 from rest_framework import viewsets
-from .models import RodzajeSprzetu
+from .models import RodzajSprzetu
 from .serializers import RodzajeSprzetuSerializer
 
 
 class RodzajeSprzetuView(viewsets.ModelViewSet):
-    queryset = RodzajeSprzetu.objects.all()
+    queryset = RodzajSprzetu.objects.all()
     serializer_class = RodzajeSprzetuSerializer
