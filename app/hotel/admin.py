@@ -5,7 +5,5 @@ import inspect
 
 
 for _, model in models.__dict__.items():
-    print(type(model))
     if inspect.isclass(model) and issubclass(model, Model):
-        print(model)
         admin.site.register(model)

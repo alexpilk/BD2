@@ -49,6 +49,8 @@ class RezerwacjeApartamentow(Rezerwacja):
     apartament = models.ForeignKey(Apartament, on_delete=models.CASCADE)
     data_wynajecia = models.DateField(verbose_name='Data wynajęcia')
     data_wymeldowania = models.DateField(verbose_name='Data wymeldowania')
+    potwierdzenie_wplaty = models.OneToOneField(PotwierdzenieWplaty, on_delete=models.CASCADE, null=True, blank=True)
+    potwierdzenie_zwrotu = models.OneToOneField(PotwierdzenieZwrotu, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'Rezerwacje apartamentów'
