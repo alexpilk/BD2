@@ -10,7 +10,7 @@ class DaneLogowania(models.Model):
         verbose_name_plural = 'Dane logowania'
 
     def __str__(self):
-        return 'Dane logowania dla {self.login}'
+        return f'Dane logowania dla {self.login}'
 
 
 class Uzytkownik(models.Model):
