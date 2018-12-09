@@ -1,8 +1,9 @@
-from django.db import models
 from django.core import validators
+from django.db import models
+
+from .apartamenty import Apartament
 from .sprzet import Sprzet
 from .uzytkownicy import Klient, Pracownik
-from .apartamenty import Apartament
 
 
 class Rezerwacja(models.Model):
@@ -24,33 +25,10 @@ class RezerwacjaSprzetu(Rezerwacja):
         return f'Rezerwacja {self.sprzet} dla {self.klient}'
 
 
-class PotwierdzenieZwrotu(models.Model):
-    pracownik = models.ForeignKey(Pracownik, on_delete=models.CASCADE)
-
-    class Meta:
-        verbose_name_plural = 'Potwierdzenia zwrotów'
-
-    def __str__(self):
-        return f'Potwierdził {self.pracownik}'
-
-
-class PotwierdzenieWplaty(models.Model):
-    kwota = models.IntegerField(verbose_name='Kwota', validators=[validators.MinValueValidator(0)])
-    data = models.DateField(verbose_name='Data dokonania')
-
-    class Meta:
-        verbose_name_plural = 'Potwierdzenia wpłat'
-
-    def __str__(self):
-        return f'{self.kwota} wpłacona {self.data}'
-
-
 class RezerwacjeApartamentow(Rezerwacja):
     apartament = models.ForeignKey(Apartament, on_delete=models.CASCADE)
     data_wynajecia = models.DateField(verbose_name='Data wynajęcia')
     data_wymeldowania = models.DateField(verbose_name='Data wymeldowania')
-    potwierdzenie_wplaty = models.OneToOneField(PotwierdzenieWplaty, on_delete=models.CASCADE, null=True, blank=True)
-    potwierdzenie_zwrotu = models.OneToOneField(PotwierdzenieZwrotu, on_delete=models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name_plural = 'Rezerwacje apartamentów'
@@ -58,3 +36,27 @@ class RezerwacjeApartamentow(Rezerwacja):
     def __str__(self):
         return f'Rezerwacja apartamentu {self.apartament}'
 
+
+class PotwierdzenieZwrotu(models.Model):
+    pracownik = models.ForeignKey(Pracownik, on_delete=models.CASCADE)
+    rezerwacja = models.OneToOneField(RezerwacjeApartamentow, on_delete=models.CASCADE,
+                                      related_name='potwierdzenie_zwrotu')
+
+    class Meta:
+        verbose_name_plural = 'Potwierdzenia zwrotów'
+
+    def __str__(self):
+        return f'Potwierdził {self.pracownik}. {self.rezerwacja}'
+
+
+class PotwierdzenieWplaty(models.Model):
+    kwota = models.IntegerField(verbose_name='Kwota', validators=[validators.MinValueValidator(0)])
+    data = models.DateField(verbose_name='Data dokonania')
+    rezerwacja = models.OneToOneField(RezerwacjeApartamentow, on_delete=models.CASCADE,
+                                      related_name='potwierdzenie_wplaty')
+
+    class Meta:
+        verbose_name_plural = 'Potwierdzenia wpłat'
+
+    def __str__(self):
+        return f'{self.kwota} wpłacona {self.data}. {self.rezerwacja}'
