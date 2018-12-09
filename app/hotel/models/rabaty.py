@@ -16,7 +16,7 @@ class TypRabatu(models.Model):
 class Rabat(models.Model):
     klient = models.ForeignKey(Klient, on_delete=models.CASCADE)
     procent_znizki = models.IntegerField(validators=[validators.MinValueValidator(0),
-                                                     validators.MaxLengthValidator(100)], verbose_name='Procent zniżki')
+                                                     validators.MaxValueValidator(100)], verbose_name='Procent zniżki')
     typ = models.ForeignKey(TypRabatu, on_delete=models.CASCADE)
 
     class Meta:
