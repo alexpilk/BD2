@@ -44,4 +44,4 @@ class Apartament(models.Model):
         verbose_name_plural = 'Apartamenty'
 
     def __str__(self):
-        return self.opis
+        return f'{"Zajęty" if self.zajety else "Wolny"} {self.opis}'

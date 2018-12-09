@@ -32,7 +32,8 @@ class BonPracowniczy(models.Model):
         verbose_name_plural = 'Bony pracownicze'
 
     def __str__(self):
-        return f'{self.typ} dla {self.stanowisko}'
+        stanowiska = ', '.join([str(stanowisko) for stanowisko in self.stanowisko.all()])
+        return f'{self.typ} dla {stanowiska}'
 
 
 class Pracownik(Uzytkownik):
