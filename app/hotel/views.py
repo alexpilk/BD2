@@ -1,24 +1,16 @@
-from rest_framework import viewsets, serializers
-from .serializers import RodzajeSprzetuSerializer
-from . import models
 import inspect
-from django.db.models import Model
+
+from rest_framework.serializers import ModelSerializer
+from rest_framework.viewsets import ModelViewSet
+
+from . import serializers
 
 
-# class RodzajeSprzetuView(viewsets.ModelViewSet):
-#     queryset = RodzajSprzetu.objects.all()
-#     serializer_class = RodzajeSprzetuSerializer
+def create_view(serializer):
 
-
-def create_view(base_model):
-    class HotelSerializer(serializers.ModelSerializer):
-        class Meta:
-            model = base_model
-            fields = '__all__'
-
-    class HotelView(viewsets.ModelViewSet):
-        queryset = base_model.objects.all()
-        serializer_class = HotelSerializer
+    class HotelView(ModelViewSet):
+        queryset = serializer.Meta.model.objects.all()
+        serializer_class = serializer
 
     return HotelView
 
@@ -26,7 +18,6 @@ def create_view(base_model):
 views = []
 
 
-for _, model in models.__dict__.items():
-    if inspect.isclass(model) and issubclass(model, Model):
-        views.append(create_view(model))
-
+for _, serializer in serializers.__dict__.items():
+    if inspect.isclass(serializer) and issubclass(serializer, ModelSerializer):
+        views.append(create_view(serializer))
