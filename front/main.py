@@ -1,7 +1,7 @@
-from gui.gui import example
 import logging
+
+from app import run
 
 logging.basicConfig(level=logging.DEBUG)
 
-
-example()
+run()

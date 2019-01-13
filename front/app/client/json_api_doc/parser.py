@@ -1,4 +1,3 @@
-from future.utils import iteritems
 from .flattener import flatten
 from .includes import IncludesWrapper
 
@@ -40,7 +39,7 @@ class Parser(object):
 
     def _resolve(self, data):
         return {
-            attribute_name: self._parse_attribute(attribute_value) for attribute_name, attribute_value in iteritems(data)
+            attribute_name: self._parse_attribute(attribute_value) for attribute_name, attribute_value in data.items()
         }
 
     def _parse_attribute(self, attribute_value):

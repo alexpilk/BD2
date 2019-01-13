@@ -1,4 +1,3 @@
-from future.utils import iteritems
 from .relationships import relationship_to_tuple
 
 
@@ -23,7 +22,7 @@ def _collect_attributes(obj):
 
 def _collect_relationships(obj):
     relationships = obj.pop('relationships', {})
-    for name, content in iteritems(relationships):
+    for name, content in relationships.items():
         obj[name] = _parse_relationships(content['data'])
 
 

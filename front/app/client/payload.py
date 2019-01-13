@@ -1,6 +1,3 @@
-from future.utils import iteritems
-
-
 class Payload(dict):
 
     def add_fields(self, fields):
@@ -19,7 +16,7 @@ class Payload(dict):
         """
         self.update(
             {
-                'fields[{}]'.format(field): ','.join(values) for field, values in iteritems(fields)
+                'fields[{}]'.format(field): ','.join(values) for field, values in fields.items()
             }
         )
 

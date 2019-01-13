@@ -1,6 +1,3 @@
-from future.utils import iteritems
-
-
 def create_filters(filters, prefix=None, operator=None):
     """
     Helper function for generating filters.
@@ -16,7 +13,7 @@ def create_filters(filters, prefix=None, operator=None):
             '{}.{}'.format(prefix, attribute) if prefix else attribute,
             value,
             operator
-        ) for attribute, value in iteritems(filters)
+        ) for attribute, value in filters.items()
     ]
 
 
@@ -33,9 +30,7 @@ class Filter(object):
         :return: filter key e.g. 'filter[relationship.attribute][contains]'
         :rtype: string
         """
-        return 'filter[{attribute}][{operator}]'.format(
-            attribute=self.attribute, operator=self.operator
-        )
+        return f'filter[{self.attribute}]' + (f'[{self.operator}]' if self.operator else '')
 
     def __repr__(self):
         return '{key}={value}'.format(

@@ -5,8 +5,14 @@
 - Install Python 3
 - `pip install pipenv`
 - `pipenv install`
+
+Next:
 - `pipenv shell`
 - `python app/manage.py runserver`
+
+Or:
+- `pipenv run python app/manage.py runserver`
+
 - Visit API root http://127.0.0.1:8000/api/v1/
 
 ## Example API requests
