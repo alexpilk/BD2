@@ -3,15 +3,15 @@ from tkinter import messagebox
 from app.api import api
 from .klient_home import KlientPage
 from .pracownik_home import PracownikPage
+from .base import BaseFrame
 
 
-class LoginPage(tk.Frame):
+class LoginPage(BaseFrame):
 
     def __init__(self, parent, controller):
-        super().__init__(parent)
+        super().__init__(parent, controller)
         label = tk.Label(self, text="Start Page")
         label.pack(pady=10, padx=10)
-        self.controller = controller
 
         self.username_input = tk.Entry(self)
         self.password_input = tk.Entry(self, show="*")
