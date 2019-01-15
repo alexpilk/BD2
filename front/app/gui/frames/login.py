@@ -16,10 +16,12 @@ class LoginPage(BaseFrame):
         self.username_input = tk.Entry(self)
         self.password_input = tk.Entry(self, show="*")
         self.login_button = tk.Button(self, text="Login", command=self.log_in)
+        self.register_button = tk.Button(self, text="Register", command=self.register)
 
         self.username_input.pack()
         self.password_input.pack()
         self.login_button.pack()
+        self.register_button.pack()
 
     def log_in(self):
         username = self.username_input.get()
@@ -48,3 +50,7 @@ class LoginPage(BaseFrame):
             self.controller.set_user(pracownik[0])
             self.controller.show_frame(PracownikPage)
             return
+
+    def register(self):
+        messagebox.showinfo('Rejstracja', "Nie jesteś godny aby się zarejestrować. Wróć za parę update'ów.")
+        return
