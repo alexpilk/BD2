@@ -1,9 +1,11 @@
 import tkinter as tk
 from tkinter import messagebox
+
 from app.api import api
+from app.gui import frames
+
 from .base import BaseFrame
 from .klient_home import KlientPage
-# from .login import LoginPage
 
 
 class RegisterPage(BaseFrame):
@@ -143,8 +145,6 @@ class RegisterPage(BaseFrame):
         messagebox.showinfo('Dodano', f'Dodano klienta: {(username)}')
         self.controller.set_user(klient[0])
         self.controller.show_frame(KlientPage)
-        return
 
     def tologin(self):
-        # self.controller.show_frame(LoginPage)
-        return
+        self.controller.show_frame(frames.LoginPage)
