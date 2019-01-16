@@ -2,11 +2,12 @@ import tkinter as tk
 from tkinter import messagebox
 from app.api import api
 from .base import BaseFrame
-from .klient_home import KlientPage
+# from .klient_home import KlientPage
+from .pracownik_home import PracownikPage
 # from .login import LoginPage
 
 
-class RegisterPage(BaseFrame):
+class RegisterPrac(BaseFrame):
 
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
@@ -25,8 +26,8 @@ class RegisterPage(BaseFrame):
         self.lastname_input = tk.Entry(self)
         self.email_label = tk.Label(self)
         self.email_input = tk.Entry(self)
-        self.card_label = tk.Label(self)
-        self.card_input = tk.Entry(self)
+        self.money_label = tk.Label(self)
+        self.money_input = tk.Entry(self)
         self.address_label = tk.Label(self)
         self.address_input = tk.Entry(self)
         self.register_button = tk.Button(self, text="Zarejestruj się", command=self.register)
@@ -47,22 +48,23 @@ class RegisterPage(BaseFrame):
         self.lastname_input.pack()
         self.email_label.pack()
         self.email_input.pack()
-        self.card_label.pack()
-        self.card_input.pack()
+        self.money_label.pack()
+        self.money_input.pack()
         self.address_label.pack()
         self.address_input.pack()
         self.register_button.pack()
         self.return_button.pack()
 
     def tkraise(self, *args, **kwargs):
-        self.label.config(text=f"Witamy na stronie rejestracji! Podaj dane:")
-        self.username_label.config(text="Nazwa użytkownika:")
+        self.label.config(text=f"Witamy na stronie rejestracji nowego pracownika!"
+                               f"Podaj dane:")
+        self.username_label.config(text="Login:")
         self.password_label.config(text="Hasło:")
         self.password_label2.config(text="Powtórz hasło:")
         self.name_label.config(text="Imię:")
         self.lastname_label.config(text="Nazwisko:")
         self.email_label.config(text="Adres email:")
-        self.card_label.config(text="Numer karty płatniczej:")
+        self.money_label.config(text="Miesięczna pensja:")
         self.address_label.config(text="Adres zamieszkania:")
         super().tkraise()
 
@@ -73,7 +75,7 @@ class RegisterPage(BaseFrame):
         name = self.name_input.get()
         lastname = self.lastname_input.get()
         email = self.email_input.get()
-        card = self.card_input.get()
+        money = self.money_input.get()
         address = self.address_input.get()
 
         self.register_button.config(bg='deep sky blue')
@@ -87,13 +89,12 @@ class RegisterPage(BaseFrame):
             self.register_button.config(bg='ghost white')
             return
         if not name or not lastname:
-            messagebox.showinfo('Error', 'Potrzebujemy Twoich danych osobowych! '
+            messagebox.showinfo('Error', 'Nie podano danych osobowych pracownika! '
                                          'Podaj imię i nazwisko.')
             self.register_button.config(bg='ghost white')
             return
-        if not email or not address or not card:
-            messagebox.showinfo('Error', 'Ptrzebujemy Twoich danych kontaktowych! '
-                                         'Podaj swój adres email, adres zamieszkania i numer karty.')
+        if not email or not address or not money:
+            messagebox.showinfo('Error', 'Podaj dane kontaktowe!')
             self.register_button.config(bg='ghost white')
             return
 
@@ -102,7 +103,7 @@ class RegisterPage(BaseFrame):
         })
 
         if login_data:
-            messagebox.showinfo('Error', 'Ten login jest zajęty! Wymyśl inny.')
+            messagebox.showinfo('Error', 'Ten login jest zajęty! Wprowadź ponownie.')
             self.register_button.config(bg='ghost white')
             return
 
@@ -120,14 +121,14 @@ class RegisterPage(BaseFrame):
             self.register_button.config(bg='ghost white')
             return
 
-        klient = api.create(
-            'Klient',
+        pracownik = api.create(
+            'Pracownik',
             attributes=
             {
                 "imie": name,
                 "nazwisko": lastname,
                 "adres": address,
-                "numer_karty": card
+                "wyplata": money
             },
             relationships={
                 'dane_logowania': {
@@ -136,13 +137,13 @@ class RegisterPage(BaseFrame):
                 }
             })
 
-        klient = api.get('Klient', filters={
+        pracownik = api.get('Klient', filters={
             'dane_logowania.login': username
         })
         self.register_button.config(bg='ghost white')
-        messagebox.showinfo('Dodano', f'Dodano klienta: {(username)}')
-        self.controller.set_user(klient[0])
-        self.controller.show_frame(KlientPage)
+        messagebox.showinfo('Dodano', f'Dodano praownika: {(username)}')
+        self.controller.set_user(pracownik[0])
+        self.controller.show_frame(PracownikPage)
         return
 
     def tologin(self):

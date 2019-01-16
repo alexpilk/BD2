@@ -11,6 +11,7 @@ class LoginPage(BaseFrame):
 
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
+
         label = tk.Label(self, text="Start Page")
         label.pack(pady=10, padx=10)
 
@@ -19,23 +20,25 @@ class LoginPage(BaseFrame):
         self.login_button = tk.Button(self, text="Login", command=self.log_in)
         self.register_button = tk.Button(self, text="Register", command=self.register)
 
+    def tkraise(self, *args, **kwargs):
         self.username_input.pack()
         self.password_input.pack()
         self.login_button.pack()
         self.register_button.pack()
+        super().tkraise()
 
     def log_in(self):
         username = self.username_input.get()
         password = self.password_input.get()
         if not username or not password:
-            messagebox.showinfo('Error', 'Wprowadź dane logowania. Po coś są te pola')
+            messagebox.showinfo('Error', 'Wprowadź dane logowania.')
             return
         login_data = api.get('DaneLogowania', filters={
             'login': username,
             'haslo': password
         })
         if not login_data:
-            messagebox.showinfo('Error', 'Podano błędne dane logowania. Z kim ja pracuję... -_-')
+            messagebox.showinfo('Error', 'Podano błędne dane logowania!')
             return
         klient = api.get('Klient', filters={
             'dane_logowania.login': username
