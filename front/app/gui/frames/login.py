@@ -4,6 +4,7 @@ from app.api import api
 from .klient_home import KlientPage
 from .pracownik_home import PracownikPage
 from .base import BaseFrame
+from .register_form import RegisterPage
 
 
 class LoginPage(BaseFrame):
@@ -27,14 +28,14 @@ class LoginPage(BaseFrame):
         username = self.username_input.get()
         password = self.password_input.get()
         if not username or not password:
-            messagebox.showinfo('Error', 'Please enter username and password')
+            messagebox.showinfo('Error', 'Wprowadź dane logowania. Po coś są te pola')
             return
         login_data = api.get('DaneLogowania', filters={
             'login': username,
             'haslo': password
         })
         if not login_data:
-            messagebox.showinfo('Error', 'Wrong username or password')
+            messagebox.showinfo('Error', 'Podano błędne dane logowania. Z kim ja pracuję... -_-')
             return
         klient = api.get('Klient', filters={
             'dane_logowania.login': username
@@ -52,5 +53,5 @@ class LoginPage(BaseFrame):
             return
 
     def register(self):
-        messagebox.showinfo('Rejstracja', "Nie jesteś godny aby się zarejestrować. Wróć za parę update'ów.")
+        self.controller.show_frame(RegisterPage)
         return
