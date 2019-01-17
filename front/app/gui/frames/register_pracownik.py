@@ -4,7 +4,15 @@ from app.api import api
 from .base import BaseFrame
 # from .klient_home import KlientPage
 from .pracownik_home import PracownikPage
-# from .login import LoginPage
+from .login import LoginPage
+
+# _____TO DO______
+# dodac stanowisko i powiązanie z nim, zeby działało dodawanie pracownika
+# (teraz nie działa) DONE
+# żeby pola tekstowe pojawiały się puste DONE
+# wylogowywanie
+# dodawanie klienta przez pracownika
+# modyfikowanie klienta
 
 
 class RegisterPrac(BaseFrame):
@@ -30,8 +38,13 @@ class RegisterPrac(BaseFrame):
         self.money_input = tk.Entry(self)
         self.address_label = tk.Label(self)
         self.address_input = tk.Entry(self)
-        self.register_button = tk.Button(self, text="Zarejestruj się", command=self.register)
-        self.return_button = tk.Button(self, text="Wróć do logowania", command=self.tologin)
+
+        self.stanowisko = tk.StringVar(self)
+        self.work_list = tk.OptionMenu(self, self.stanowisko, "Recepcjonista", "Sprzątaczka",
+                                       "Magazynier", "Ochrona", "Manager")
+
+        self.register_button = tk.Button(self, text="Dodaj pracownika", command=self.register)
+        self.return_button = tk.Button(self, text="Wróć do strony pracownika", command=self.tohome)
 
         self.register_button.config(bg='ghost white')
         self.return_button.config(bg='ghost white')
@@ -52,11 +65,12 @@ class RegisterPrac(BaseFrame):
         self.money_input.pack()
         self.address_label.pack()
         self.address_input.pack()
+        self.work_list.pack()
         self.register_button.pack()
         self.return_button.pack()
 
     def tkraise(self, *args, **kwargs):
-        self.label.config(text=f"Witamy na stronie rejestracji nowego pracownika!"
+        self.label.config(text=f"Witamy na stronie rejestracji nowego pracownika! "
                                f"Podaj dane:")
         self.username_label.config(text="Login:")
         self.password_label.config(text="Hasło:")
@@ -66,6 +80,15 @@ class RegisterPrac(BaseFrame):
         self.email_label.config(text="Adres email:")
         self.money_label.config(text="Miesięczna pensja:")
         self.address_label.config(text="Adres zamieszkania:")
+
+        self.username_input.delete(0, tk.END)
+        self.password_input.delete(0, tk.END)
+        self.password_input2.delete(0, tk.END)
+        self.name_input.delete(0, tk.END)
+        self.lastname_input.delete(0, tk.END)
+        self.email_input.delete(0, tk.END)
+        self.money_input.delete(0, tk.END)
+        self.address_input.delete(0, tk.END)
         super().tkraise()
 
     def register(self):
@@ -77,12 +100,10 @@ class RegisterPrac(BaseFrame):
         email = self.email_input.get()
         money = self.money_input.get()
         address = self.address_input.get()
-
-        self.register_button.config(bg='deep sky blue')
+        stanowisko = self.stanowisko.get()
 
         if not username or (not password1 and not password2):
             messagebox.showinfo('Error', 'Podaj login i hasło!')
-            self.register_button.config(bg='ghost white')
             return
         if password1 != password2:
             messagebox.showinfo('Error', 'Podano dwa różne hasła!')
@@ -91,11 +112,15 @@ class RegisterPrac(BaseFrame):
         if not name or not lastname:
             messagebox.showinfo('Error', 'Nie podano danych osobowych pracownika! '
                                          'Podaj imię i nazwisko.')
-            self.register_button.config(bg='ghost white')
             return
-        if not email or not address or not money:
+        if not email or not address:
             messagebox.showinfo('Error', 'Podaj dane kontaktowe!')
-            self.register_button.config(bg='ghost white')
+            return
+        if not money:
+            messagebox.showinfo('Error', 'Pracownik musi mieć pensję!')
+            return
+        if not stanowisko:
+            messagebox.showinfo('Error', 'Pracownik musi mieć stanowisko!')
             return
 
         login_data = api.get('DaneLogowania', filters={
@@ -121,31 +146,41 @@ class RegisterPrac(BaseFrame):
             self.register_button.config(bg='ghost white')
             return
 
-        pracownik = api.create(
-            'Pracownik',
-            attributes=
-            {
-                "imie": name,
-                "nazwisko": lastname,
-                "adres": address,
-                "wyplata": money
-            },
-            relationships={
-                'dane_logowania': {
-                    'type': 'DaneLogowania',
-                    'id': username
-                }
-            })
+        try:
+            pracownik = api.create(
+                'Pracownik',
+                attributes=
+                {
+                    "imie": name,
+                    "nazwisko": lastname,
+                    "adres": address,
+                    "wyplata": money
+                },
+                relationships={
+                    'dane_logowania': {
+                        'type': 'DaneLogowania',
+                        'id': username
+                    },
+                    "stanowisko": {
+                        "type": "Stanowisko",
+                        "id": stanowisko
+                    }
+                })
+        except Exception:
+            messagebox.showinfo('Error', 'Nie można utworzyć konta pracownika! '
+                                         'Sprawdź czy wszystkie dane zostały '
+                                         'prawidłowo wprowadzone.')
+            api.delete('DaneLogowania', _id=dane_logowania['id'])
+            return
 
-        pracownik = api.get('Klient', filters={
+        pracownik = api.get('Pracownik', filters={
             'dane_logowania.login': username
         })
         self.register_button.config(bg='ghost white')
-        messagebox.showinfo('Dodano', f'Dodano praownika: {(username)}')
+        messagebox.showinfo('Dodano', f'Dodano pracownika: {(username)}')
         self.controller.set_user(pracownik[0])
         self.controller.show_frame(PracownikPage)
         return
 
-    def tologin(self):
-        # self.controller.show_frame(LoginPage)
-        return
+    def tohome(self):
+        self.controller.show_frame(PracownikPage)

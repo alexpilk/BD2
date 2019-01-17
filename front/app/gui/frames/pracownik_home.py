@@ -1,6 +1,8 @@
 import tkinter as tk
+from tkinter import messagebox
 from .base import BaseFrame
-# from .register_pracownik import RegisterPage as addprac
+from app.gui import frames
+# from .register_pracownik import RegisterPrac
 
 
 class PracownikPage(BaseFrame):
@@ -9,7 +11,7 @@ class PracownikPage(BaseFrame):
         super().__init__(parent, controller)
         self.label = tk.Label(self)
         self.label.pack(pady=10, padx=10)
-        self.button = tk.Button(self, text="Dodaj")#, command=self.addworker)
+        self.button = tk.Button(self, text="Dodaj", command=self.addworker)
 
     def tkraise(self, *args, **kwargs):
         self.label.config(text=f"Witamy na stronie pracownika, {self.controller.user_data['imie']}")
@@ -18,5 +20,5 @@ class PracownikPage(BaseFrame):
         super().tkraise()
 
     def addworker(self):
-        # self.controller.show_frame(addprac)
-        return
+        self.controller.show_frame(frames.RegisterPrac)
+

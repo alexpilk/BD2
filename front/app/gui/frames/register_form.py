@@ -66,6 +66,15 @@ class RegisterPage(BaseFrame):
         self.email_label.config(text="Adres email:")
         self.card_label.config(text="Numer karty płatniczej:")
         self.address_label.config(text="Adres zamieszkania:")
+
+        self.username_input.delete(0, tk.END)
+        self.password_input.delete(0, tk.END)
+        self.password_input2.delete(0, tk.END)
+        self.name_input.delete(0, tk.END)
+        self.lastname_input.delete(0, tk.END)
+        self.email_input.delete(0, tk.END)
+        self.card_input.delete(0, tk.END)
+        self.address_input.delete(0, tk.END)
         super().tkraise()
 
     def register(self):

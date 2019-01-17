@@ -6,6 +6,10 @@ from .pracownik_home import PracownikPage
 from .base import BaseFrame
 from .register_form import RegisterPage
 
+# Uwaga! -----------------------------------------------
+# 1) logowanie losowoo wyrzuca błędy :/ nie wiem czemu, jak
+# znów się kliknie logowanie to nie ma błędu
+# ^ bo traci połączenie z bazą. Why?
 
 class LoginPage(BaseFrame):
 
@@ -25,6 +29,11 @@ class LoginPage(BaseFrame):
         self.password_input.pack()
         self.login_button.pack()
         self.register_button.pack()
+
+        self.username_input.delete(0, tk.END)
+        self.username_input.insert(0, "MariahCarey")
+        self.password_input.delete(0, tk.END)
+        self.password_input.insert(0, "MariahCarey1")
         super().tkraise()
 
     def log_in(self):
