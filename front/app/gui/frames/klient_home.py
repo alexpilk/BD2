@@ -1,5 +1,6 @@
 import tkinter as tk
 from .base import BaseFrame
+from app.gui import frames
 
 
 class KlientPage(BaseFrame):
@@ -8,7 +9,13 @@ class KlientPage(BaseFrame):
         super().__init__(parent, controller)
         self.label = tk.Label(self)
         self.label.pack(pady=10, padx=10)
+        self.logout_button = tk.Button(self, text="Wyloguj", command=self.logout)
 
     def tkraise(self, *args, **kwargs):
         self.label.config(text=f"Witamy na stronie klienta, {self.controller.user_data['imie']}")
+        self.logout_button.pack()
         super().tkraise()
+
+    def logout(self):
+        self.controller.show_frame(frames.LoginPage)
+

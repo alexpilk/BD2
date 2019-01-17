@@ -1,23 +1,14 @@
 import tkinter as tk
 from tkinter import messagebox
+
 from app.api import api
+from app.gui import frames
+
 from .base import BaseFrame
-# from .klient_home import KlientPage
-from .pracownik_home import PracownikPage
-from .login import LoginPage
+from .klient_home import KlientPage
 
-# _____TO DO______
-# dodac stanowisko i powiązanie z nim, zeby działało dodawanie pracownika
-# (teraz nie działa) DONE
-# żeby pola tekstowe pojawiały się puste DONE
-# wylogowywanie DONE
-# dodawanie klienta przez pracownika
-# modyfikowanie klienta
-# rabat nie łączy się z pracownikiem! Nie może być :o
-# i nonusy pracownicze się z nimi nie łączą! xd not good
-# jak starczy czasu, zmienić OptionMenu tak, żeby się aktualizowały
 
-class RegisterPrac(BaseFrame):
+class RegisterKli(BaseFrame):
 
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
@@ -36,16 +27,11 @@ class RegisterPrac(BaseFrame):
         self.lastname_input = tk.Entry(self)
         self.email_label = tk.Label(self)
         self.email_input = tk.Entry(self)
-        self.money_label = tk.Label(self)
-        self.money_input = tk.Entry(self)
+        self.card_label = tk.Label(self)
+        self.card_input = tk.Entry(self)
         self.address_label = tk.Label(self)
         self.address_input = tk.Entry(self)
-
-        self.stanowisko = tk.StringVar(self)
-        self.work_list = tk.OptionMenu(self, self.stanowisko, "Recepcjonista", "Sprzątaczka",
-                                       "Magazynier", "Ochrona", "Manager")
-
-        self.register_button = tk.Button(self, text="Dodaj pracownika", command=self.register)
+        self.register_button = tk.Button(self, text="Zarejestruj klienta", command=self.register)
         self.return_button = tk.Button(self, text="Wróć do strony pracownika", command=self.tohome)
 
         self.register_button.config(bg='ghost white')
@@ -63,24 +49,22 @@ class RegisterPrac(BaseFrame):
         self.lastname_input.pack()
         self.email_label.pack()
         self.email_input.pack()
-        self.money_label.pack()
-        self.money_input.pack()
+        self.card_label.pack()
+        self.card_input.pack()
         self.address_label.pack()
         self.address_input.pack()
-        self.work_list.pack()
         self.register_button.pack()
         self.return_button.pack()
 
     def tkraise(self, *args, **kwargs):
-        self.label.config(text=f"Witamy na stronie rejestracji nowego pracownika! "
-                               f"Podaj dane:")
-        self.username_label.config(text="Login:")
+        self.label.config(text=f"Witamy na stronie rejestracji! Podaj dane:")
+        self.username_label.config(text="Nazwa użytkownika:")
         self.password_label.config(text="Hasło:")
         self.password_label2.config(text="Powtórz hasło:")
         self.name_label.config(text="Imię:")
         self.lastname_label.config(text="Nazwisko:")
         self.email_label.config(text="Adres email:")
-        self.money_label.config(text="Miesięczna pensja:")
+        self.card_label.config(text="Numer karty płatniczej:")
         self.address_label.config(text="Adres zamieszkania:")
 
         self.username_input.delete(0, tk.END)
@@ -89,7 +73,7 @@ class RegisterPrac(BaseFrame):
         self.name_input.delete(0, tk.END)
         self.lastname_input.delete(0, tk.END)
         self.email_input.delete(0, tk.END)
-        self.money_input.delete(0, tk.END)
+        self.card_input.delete(0, tk.END)
         self.address_input.delete(0, tk.END)
         super().tkraise()
 
@@ -100,29 +84,28 @@ class RegisterPrac(BaseFrame):
         name = self.name_input.get()
         lastname = self.lastname_input.get()
         email = self.email_input.get()
-        money = self.money_input.get()
+        card = self.card_input.get()
         address = self.address_input.get()
-        stanowisko = self.stanowisko.get()
+
+        self.register_button.config(bg='deep sky blue')
 
         if not username or (not password1 and not password2):
             messagebox.showinfo('Error', 'Podaj login i hasło!')
+            self.register_button.config(bg='ghost white')
             return
         if password1 != password2:
             messagebox.showinfo('Error', 'Podano dwa różne hasła!')
             self.register_button.config(bg='ghost white')
             return
         if not name or not lastname:
-            messagebox.showinfo('Error', 'Nie podano danych osobowych pracownika! '
+            messagebox.showinfo('Error', 'Potrzebujemy Twoich danych osobowych! '
                                          'Podaj imię i nazwisko.')
+            self.register_button.config(bg='ghost white')
             return
-        if not email or not address:
-            messagebox.showinfo('Error', 'Podaj dane kontaktowe!')
-            return
-        if not money:
-            messagebox.showinfo('Error', 'Pracownik musi mieć pensję!')
-            return
-        if not stanowisko:
-            messagebox.showinfo('Error', 'Pracownik musi mieć stanowisko!')
+        if not email or not address or not card:
+            messagebox.showinfo('Error', 'Ptrzebujemy Twoich danych kontaktowych! '
+                                         'Podaj swój adres email, adres zamieszkania i numer karty.')
+            self.register_button.config(bg='ghost white')
             return
 
         login_data = api.get('DaneLogowania', filters={
@@ -130,7 +113,7 @@ class RegisterPrac(BaseFrame):
         })
 
         if login_data:
-            messagebox.showinfo('Error', 'Ten login jest zajęty! Wprowadź ponownie.')
+            messagebox.showinfo('Error', 'Ten login jest zajęty! Wymyśl inny.')
             self.register_button.config(bg='ghost white')
             return
 
@@ -148,41 +131,29 @@ class RegisterPrac(BaseFrame):
             self.register_button.config(bg='ghost white')
             return
 
-        try:
-            pracownik = api.create(
-                'Pracownik',
-                attributes=
-                {
-                    "imie": name,
-                    "nazwisko": lastname,
-                    "adres": address,
-                    "wyplata": money
-                },
-                relationships={
-                    'dane_logowania': {
-                        'type': 'DaneLogowania',
-                        'id': username
-                    },
-                    "stanowisko": {
-                        "type": "Stanowisko",
-                        "id": stanowisko
-                    }
-                })
-        except Exception:
-            messagebox.showinfo('Error', 'Nie można utworzyć konta pracownika! '
-                                         'Sprawdź czy wszystkie dane zostały '
-                                         'prawidłowo wprowadzone.')
-            api.delete('DaneLogowania', _id=dane_logowania['id'])
-            return
+        klient = api.create(
+            'Klient',
+            attributes=
+            {
+                "imie": name,
+                "nazwisko": lastname,
+                "adres": address,
+                "numer_karty": card
+            },
+            relationships={
+                'dane_logowania': {
+                    'type': 'DaneLogowania',
+                    'id': username
+                }
+            })
 
-        pracownik = api.get('Pracownik', filters={
+        klient = api.get('Klient', filters={
             'dane_logowania.login': username
         })
         self.register_button.config(bg='ghost white')
-        messagebox.showinfo('Dodano', f'Dodano pracownika: {(username)}')
-        self.controller.set_user(pracownik[0])
-        self.controller.show_frame(PracownikPage)
-        return
+        messagebox.showinfo('Dodano', f'Dodano klienta: {(username)}')
+        self.controller.set_user(klient[0])
+        self.controller.show_frame(KlientPage)
 
     def tohome(self):
-        self.controller.show_frame(PracownikPage)
+        self.controller.show_frame(frames.PracownikPage)
