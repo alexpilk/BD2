@@ -5,3 +5,6 @@ from .register_form import RegisterPage
 from .register_pracownik import RegisterPrac
 from .register_klient import RegisterKli
 from .add_apartment import ApartmentAddPage
+from .add_apartment_description import AddApartmentDescription
+from .add_item import ItemAddPage
+from .add_item_description import AddItemDescription

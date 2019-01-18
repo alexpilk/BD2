@@ -14,6 +14,7 @@ class PracownikPage(BaseFrame):
         self.add_button = tk.Button(self, text="Dodaj pracownika", command=self.addworker)
         self.add_client_button = tk.Button(self, text="Dodaj klienta", command=self.addclient)
         self.add_apartment_button = tk.Button(self, text="Dodaj apartament", command=self.addapartment)
+        self.add_item_button = tk.Button(self, text="Dodaj sprzęt", command=self.additem)
         self.logout_button = tk.Button(self, text="Wyloguj", command=self.logout)
 
     def tkraise(self, *args, **kwargs):
@@ -21,10 +22,12 @@ class PracownikPage(BaseFrame):
         self.add_button.config(bg='ghost white')
         self.add_client_button.config(bg='ghost white')
         self.add_apartment_button.config(bg='ghost white')
+        self.add_item_button.config(bg='ghost white')
         self.logout_button.config(bg='ghost white')
         self.add_button.pack()
         self.add_client_button.pack()
         self.add_apartment_button.pack()
+        self.add_item_button.pack()
         self.logout_button.pack()
         super().tkraise()
 
@@ -39,3 +42,8 @@ class PracownikPage(BaseFrame):
 
     def addapartment(self):
         self.controller.show_frame(frames.ApartmentAddPage)
+
+    def additem(self):
+        self.controller.show_frame(frames.ItemAddPage)
+
+
