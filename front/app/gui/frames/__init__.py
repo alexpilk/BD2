@@ -11,3 +11,4 @@ from .add_item_description import AddItemDescription
 from .reserve_apartment import ApartmentReservePage
 from .klient_change_page import KlientChangePage
 from .reserve_item import ItemReservePage
+from .pracownik_change_page import PracownikChangePage
