@@ -32,3 +32,6 @@ class HotelApp(tk.Tk):
 
     def set_user(self, user_data):
         self.user_data = user_data
+
+    def get_user(self):
+        return self.user_data

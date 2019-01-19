@@ -31,9 +31,11 @@ class LoginPage(BaseFrame):
         self.register_button.pack()
 
         self.username_input.delete(0, tk.END)
-        self.username_input.insert(0, "MariahCarey")
         self.password_input.delete(0, tk.END)
-        self.password_input.insert(0, "MariahCarey1")
+        # self.password_input.insert(0, "MariahCarey1")
+        # self.username_input.insert(0, "MariahCarey")
+        self.username_input.insert(0, "BilboBaggins")
+        self.password_input.insert(0, "BilboBaggins1")
         super().tkraise()
 
     def log_in(self):

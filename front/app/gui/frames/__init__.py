@@ -8,3 +8,6 @@ from .add_apartment import ApartmentAddPage
 from .add_apartment_description import AddApartmentDescription
 from .add_item import ItemAddPage
 from .add_item_description import AddItemDescription
+from .reserve_apartment import ApartmentReservePage
+from .klient_change_page import KlientChangePage
+from .reserve_item import ItemReservePage

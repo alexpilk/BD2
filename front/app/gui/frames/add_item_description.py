@@ -107,7 +107,7 @@ class AddItemDescription(BaseFrame):
                     }
                 })
         except Exception:
-            messagebox.showinfo('Error', 'Nie można utworzyć opisu apartamentu! '
+            messagebox.showinfo('Error', 'Nie można utworzyć opisu sprzętu! '
                                          'Sprawdź czy wszystkie dane zostały '
                                          'prawidłowo wprowadzone.')
             return

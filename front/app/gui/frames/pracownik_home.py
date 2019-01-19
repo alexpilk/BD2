@@ -34,9 +34,6 @@ class PracownikPage(BaseFrame):
     def addworker(self):
         self.controller.show_frame(frames.RegisterPrac)
 
-    def logout(self):
-        self.controller.show_frame(frames.LoginPage)
-
     def addclient(self):
         self.controller.show_frame(frames.RegisterKli)
 
@@ -45,5 +42,11 @@ class PracownikPage(BaseFrame):
 
     def additem(self):
         self.controller.show_frame(frames.ItemAddPage)
+
+    def logout(self):
+        self.controller.set_user(0)
+        self.controller.show_frame(frames.LoginPage)
+
+
 
 

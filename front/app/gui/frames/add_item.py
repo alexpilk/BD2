@@ -4,6 +4,7 @@ from .base import BaseFrame
 from app.gui import frames
 # from .register_pracownik import RegisterPrac
 from app.api import api
+import tkcalendar
 
 class ItemAddPage(BaseFrame):
 
@@ -37,7 +38,7 @@ class ItemAddPage(BaseFrame):
         self.status_list = tk.OptionMenu(self, self.status, "Wolny", "Zajęty")
 
         self.checkdate_label = tk.Label(self)
-        # dodać datę przeglądu... omg...
+        self.callendar_box = tkcalendar.Calendar(self)
 
         self.add_descr_button = tk.Button(self, text="Dodaj nowy opis sprzętu", command=self.add_desription)
         self.add_button = tk.Button(self, text="Dodaj nowy sprzęt", command=self.add_item)
@@ -62,6 +63,7 @@ class ItemAddPage(BaseFrame):
         self.size_label.pack()
         self.size_input.pack()
         self.checkdate_label.pack()
+        self.callendar_box.pack()
 
         self.status_label.pack()
         self.status_list.pack()
@@ -77,9 +79,9 @@ class ItemAddPage(BaseFrame):
                 description = self.descriptions_get[item]['id']
         size = self.size_input.get()
         status = self.status.get()
+        date = self.callendar_box.selection_get()
 
-
-        if not description or not status or not size:
+        if not description or not status or not size or (status == "---") or not date:
             messagebox.showinfo('Error', 'Podaj dane sprzętu!')
             return
 
@@ -90,7 +92,7 @@ class ItemAddPage(BaseFrame):
                     attributes={
                         "rozmiar": size,
                         "zajety": False,
-                        "termin_przegladu": "2019-03-01T09:00:00Z"
+                        "termin_przegladu": date+"T09:00:00Z"
                     },
                     relationships={
                         'opis': {
