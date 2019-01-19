@@ -2,14 +2,19 @@ from rest_framework_json_api import serializers
 from . import models
 
 
-class DaneLogowaniaSerializer(serializers.ModelSerializer):
+class HotelSerializer(serializers.ModelSerializer):
+
+    verbose_name = serializers.ReadOnlyField(source='__str__')
+
+
+class DaneLogowaniaSerializer(HotelSerializer):
 
     class Meta:
         model = models.DaneLogowania
         fields = '__all__'
 
 
-class KlientSerializer(serializers.ModelSerializer):
+class KlientSerializer(HotelSerializer):
     included_serializers = {
         'dane_logowania': 'hotel.serializers.DaneLogowaniaSerializer',
     }
@@ -19,7 +24,7 @@ class KlientSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PracownikSerializer(serializers.ModelSerializer):
+class PracownikSerializer(HotelSerializer):
     included_serializers = {
         'dane_logowania': 'hotel.serializers.DaneLogowaniaSerializer',
         'stanowisko': 'hotel.serializers.StanowiskoSerializer',
@@ -30,7 +35,7 @@ class PracownikSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class BonPracowniczySerializer(serializers.ModelSerializer):
+class BonPracowniczySerializer(HotelSerializer):
     included_serializers = {
         'typ': 'hotel.serializers.TypBonuPracowniczegoSerializer',
         'stanowisko': 'hotel.serializers.StanowiskoSerializer',
@@ -41,21 +46,21 @@ class BonPracowniczySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TypBonuPracowniczegoSerializer(serializers.ModelSerializer):
+class TypBonuPracowniczegoSerializer(HotelSerializer):
 
     class Meta:
         model = models.TypBonuPracowniczego
         fields = '__all__'
 
 
-class StanowiskoSerializer(serializers.ModelSerializer):
+class StanowiskoSerializer(HotelSerializer):
 
     class Meta:
         model = models.Stanowisko
         fields = '__all__'
 
 
-class ApartamentSerializer(serializers.ModelSerializer):
+class ApartamentSerializer(HotelSerializer):
     included_serializers = {
         'opis': 'hotel.serializers.OpisApartamentuSerializer',
     }
@@ -65,7 +70,7 @@ class ApartamentSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class OpisApartamentuSerializer(serializers.ModelSerializer):
+class OpisApartamentuSerializer(HotelSerializer):
     included_serializers = {
         'rodzaj': 'hotel.serializers.RodzajApartamentuSerializer',
         'lokalizacja': 'hotel.serializers.LokalizacjaSerializer',
@@ -76,21 +81,21 @@ class OpisApartamentuSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class LokalizacjaSerializer(serializers.ModelSerializer):
+class LokalizacjaSerializer(HotelSerializer):
 
     class Meta:
         model = models.Lokalizacja
         fields = '__all__'
 
 
-class RodzajApartamentuSerializer(serializers.ModelSerializer):
+class RodzajApartamentuSerializer(HotelSerializer):
 
     class Meta:
         model = models.RodzajApartamentu
         fields = '__all__'
 
 
-class RabatSerializer(serializers.ModelSerializer):
+class RabatSerializer(HotelSerializer):
     included_serializers = {
         'klient': 'hotel.serializers.KlientSerializer',
         'typ': 'hotel.serializers.TypRabatuSerializer',
@@ -101,14 +106,14 @@ class RabatSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class TypRabatuSerializer(serializers.ModelSerializer):
+class TypRabatuSerializer(HotelSerializer):
 
     class Meta:
         model = models.TypRabatu
         fields = '__all__'
 
 
-class RezerwacjaSprzetuSerializer(serializers.ModelSerializer):
+class RezerwacjaSprzetuSerializer(HotelSerializer):
     included_serializers = {
         'klient': 'hotel.serializers.KlientSerializer',
         'sprzet': 'hotel.serializers.SprzetSerializer',
@@ -119,7 +124,7 @@ class RezerwacjaSprzetuSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class RezerwacjeApartamentowSerializer(serializers.ModelSerializer):
+class RezerwacjeApartamentowSerializer(HotelSerializer):
     included_serializers = {
         'klient': 'hotel.serializers.KlientSerializer',
         'apartament': 'hotel.serializers.ApartamentSerializer',
@@ -130,7 +135,7 @@ class RezerwacjeApartamentowSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PotwierdzenieWplatySerializer(serializers.ModelSerializer):
+class PotwierdzenieWplatySerializer(HotelSerializer):
     included_serializers = {
         'rezerwacja': 'hotel.serializers.RezerwacjeApartamentowSerializer',
     }
@@ -140,7 +145,7 @@ class PotwierdzenieWplatySerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class PotwierdzenieZwrotuSerializer(serializers.ModelSerializer):
+class PotwierdzenieZwrotuSerializer(HotelSerializer):
     included_serializers = {
         'pracownik': 'hotel.serializers.PracownikSerializer',
         'rezerwacja': 'hotel.serializers.RezerwacjeApartamentowSerializer',
@@ -151,21 +156,21 @@ class PotwierdzenieZwrotuSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class ProducentSerializer(serializers.ModelSerializer):
+class ProducentSerializer(HotelSerializer):
 
     class Meta:
         model = models.Producent
         fields = '__all__'
 
 
-class RodzajSprzetuSerializer(serializers.ModelSerializer):
+class RodzajSprzetuSerializer(HotelSerializer):
 
     class Meta:
         model = models.RodzajSprzetu
         fields = '__all__'
 
 
-class OpisSprzetuSerializer(serializers.ModelSerializer):
+class OpisSprzetuSerializer(HotelSerializer):
     included_serializers = {
         'rodzaj': 'hotel.serializers.RodzajSprzetuSerializer',
         'producent': 'hotel.serializers.ProducentSerializer',
@@ -176,7 +181,7 @@ class OpisSprzetuSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
-class SprzetSerializer(serializers.ModelSerializer):
+class SprzetSerializer(HotelSerializer):
     included_serializers = {
         'opis': 'hotel.serializers.OpisSprzetuSerializer',
     }
