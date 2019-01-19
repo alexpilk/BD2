@@ -4,18 +4,7 @@ from app.api import api
 from .base import BaseFrame
 # from .klient_home import KlientPage
 from .pracownik_home import PracownikPage
-from .login import LoginPage
 
-# _____TO DO______
-# dodac stanowisko i powiązanie z nim, zeby działało dodawanie pracownika
-# (teraz nie działa) DONE
-# żeby pola tekstowe pojawiały się puste DONE
-# wylogowywanie DONE
-# dodawanie klienta przez pracownika
-# modyfikowanie klienta
-# rabat nie łączy się z pracownikiem! Nie może być :o
-# i nonusy pracownicze się z nimi nie łączą! xd not good
-# jak starczy czasu, zmienić OptionMenu tak, żeby się aktualizowały
 
 class RegisterPrac(BaseFrame):
 
@@ -41,9 +30,20 @@ class RegisterPrac(BaseFrame):
         self.address_label = tk.Label(self)
         self.address_input = tk.Entry(self)
 
+        self.descriptions_get = []
+        self.descriptions_get = api.get(
+            'Stanowisko',
+            fields={
+                "IdStanowiska": ['id'],
+                "NazwaStanowiska": ['nazwa']
+            }
+        )
+        self.elements = []
+        for i in range(len(self.descriptions_get)):
+            self.elements.append(self.descriptions_get[i]['nazwa'])
+
         self.stanowisko = tk.StringVar(self)
-        self.work_list = tk.OptionMenu(self, self.stanowisko, "Recepcjonista", "Sprzątaczka",
-                                       "Magazynier", "Ochrona", "Manager")
+        self.work_list = tk.OptionMenu(self, self.stanowisko, *self.elements)
 
         self.register_button = tk.Button(self, text="Dodaj pracownika", command=self.register)
         self.return_button = tk.Button(self, text="Wróć do strony pracownika", command=self.tohome)
@@ -83,6 +83,8 @@ class RegisterPrac(BaseFrame):
         self.money_label.config(text="Miesięczna pensja:")
         self.address_label.config(text="Adres zamieszkania:")
 
+        self.stanowisko.set("---")
+
         self.username_input.delete(0, tk.END)
         self.password_input.delete(0, tk.END)
         self.password_input2.delete(0, tk.END)
@@ -103,6 +105,10 @@ class RegisterPrac(BaseFrame):
         money = self.money_input.get()
         address = self.address_input.get()
         stanowisko = self.stanowisko.get()
+
+        for item in range(len(self.elements)):
+            if self.elements[item] == stanowisko:
+                stanowisko = self.descriptions_get[item]['id']
 
         if not username or (not password1 and not password2):
             messagebox.showinfo('Error', 'Podaj login i hasło!')
@@ -149,7 +155,7 @@ class RegisterPrac(BaseFrame):
             return
 
         try:
-            pracownik = api.create(
+            api.create(
                 'Pracownik',
                 attributes=
                 {
@@ -179,7 +185,7 @@ class RegisterPrac(BaseFrame):
             'dane_logowania.login': username
         })
         self.register_button.config(bg='ghost white')
-        messagebox.showinfo('Dodano', f'Dodano pracownika: {(username)}')
+        messagebox.showinfo('Dodano', f'Dodano pracownika: {name}')
         self.controller.set_user(pracownik[0])
         self.controller.show_frame(PracownikPage)
         return

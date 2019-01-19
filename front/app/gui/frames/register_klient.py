@@ -131,7 +131,7 @@ class RegisterKli(BaseFrame):
             self.register_button.config(bg='ghost white')
             return
 
-        klient = api.create(
+        api.create(
             'Klient',
             attributes=
             {
@@ -151,7 +151,7 @@ class RegisterKli(BaseFrame):
             'dane_logowania.login': username
         })
         self.register_button.config(bg='ghost white')
-        messagebox.showinfo('Dodano', f'Dodano klienta: {(username)}')
+        messagebox.showinfo('Dodano', f'Dodano klienta: {(name)}')
         self.controller.set_user(klient[0])
         self.controller.show_frame(KlientPage)
 
