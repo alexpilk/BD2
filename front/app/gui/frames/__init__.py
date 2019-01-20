@@ -12,3 +12,5 @@ from .reserve_apartment import ApartmentReservePage
 from .klient_change_page import KlientChangePage
 from .reserve_item import ItemReservePage
 from .pracownik_change_page import PracownikChangePage
+from .return_item_page import ItemReturnPage
+from .return_app_page import AppReturnPage

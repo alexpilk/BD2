@@ -35,3 +35,16 @@ class HotelApp(tk.Tk):
 
     def get_user(self):
         return self.user_data
+
+    info_o_programie = 'Aplikacja obsługująca ośrodek wypoczynkowy\n\n' \
+                                                      'AUTORZY:\n' \
+                                                      '     Oleksii Pilkevych\n' \
+                                                      '     Iwona Wachowska\n' \
+                                                      '     Filip Kądziołka\n\n' \
+                                                      'Projekt studencki na kursie:\n' \
+                                                      '     BAZY DANYCH 2\n' \
+                                                      'Prowadzący:\n' \
+                                                      '     dr.inż.Jarosław Rudy\n' \
+                                                      'Uczelnia:\n' \
+                                                      '     Politechnika Wrocławska\n\n' \
+                                                      ' * oprogramowanie powstało dzięki wsparciu sponsorów.'

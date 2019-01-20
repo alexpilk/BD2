@@ -31,7 +31,6 @@ class ApartmentAddPage(BaseFrame):
         self.status = tk.StringVar(self)
         self.status_list = tk.OptionMenu(self, self.status, "Wolny", "Zajęty")
 
-        self.add_descr_button = tk.Button(self, text="Dodaj nowy opis apartamentu", command=self.add_desription)
         self.add_button = tk.Button(self, text="Dodaj nowy apartament", command=self.add_ap)
         self.return_button = tk.Button(self, text="Wróć do strony pracownika", command=self.tohome)
 
@@ -41,7 +40,6 @@ class ApartmentAddPage(BaseFrame):
         self.status_label.config(text="Status apartamentu:")
         self.add_button.config(bg='ghost white')
         self.return_button.config(bg='ghost white')
-        self.add_descr_button.config(bg='ghost white')
 
         self.opis.set("---")
         self.status.set("---")
@@ -50,7 +48,6 @@ class ApartmentAddPage(BaseFrame):
         self.descr_list.pack()
         self.status_label.pack()
         self.status_list.pack()
-        self.add_descr_button.pack()
         self.add_button.pack()
         self.return_button.pack()
         super().tkraise()
@@ -103,10 +100,6 @@ class ApartmentAddPage(BaseFrame):
                                              'prawidłowo wprowadzone.')
                 return
         messagebox.showinfo('Info', f'Utworzono nowy: {(apartment["verbose_name"])}.')
-
-    def add_desription(self):
-        self.controller.show_frame(frames.AddApartmentDescription)
-
 
     def tohome(self):
         self.controller.show_frame(frames.PracownikPage)

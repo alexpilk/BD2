@@ -18,6 +18,21 @@ class ApartmentReservePage(BaseFrame):
         self.apartment_list = tk.Listbox(self)
         self.apartment_list.config(height=10, width=60, selectmode='browse')
 
+        self.start_date_label = tk.Label(self)
+        self.start_date_input = tk.Entry(self)
+        self.end_date_label = tk.Label(self)
+        self.end_date_input = tk.Entry(self)
+
+        self.reserve_apartment_button = tk.Button(self, text="Rezerwuj apartament", command=self.reserve_apartment)
+        self.return_button = tk.Button(self, text="Wróć do strony głównej", command=self.tohome)
+
+    def tkraise(self, *args, **kwargs):
+        self.label.config(text="Rezerwacja apartamentu")
+        self.start_date_label.config(text="Data rozpoczęcia rezerwacji:")
+        self.end_date_label.config(text="Data zakończenia rezerwacji:")
+
+        self.apartment_list.delete(0, tk.END)
+
         self.apps_get = []
         self.apps_get = api.get(
             'Apartament',
@@ -37,20 +52,8 @@ class ApartmentReservePage(BaseFrame):
         for item in self.elements:
             self.apartment_list.insert(tk.END, item)
 
-        self.start_date_label = tk.Label(self)
-        self.start_date_input = tk.Entry(self)
-        self.end_date_label = tk.Label(self)
-        self.end_date_input = tk.Entry(self)
-
-        self.reserve_apartment_button = tk.Button(self, text="Rezerwuj apartament", command=self.reserve_apartment)
-        self.return_button = tk.Button(self, text="Wróć do strony głównej", command=self.tohome)
-
-    def tkraise(self, *args, **kwargs):
-        self.label.config(text="Rezerwacja apartamentu")
-        self.start_date_label.config(text="Data rozpoczęcia rezerwacji:")
-        self.end_date_label.config(text="Data zakończenia rezerwacji:")
-
         self.apartment_list.activate(0)
+        self.apartment_list.selection_set(0,0)
         self.start_date_input.delete(0, tk.END)
         # self.start_date_input.insert(0, "yyyy-mm-dd")
         self.start_date_input.insert(0, "2019-07-03")
@@ -79,6 +82,16 @@ class ApartmentReservePage(BaseFrame):
         if not apartment or not start_date or not end_date:
             messagebox.showinfo('Error', 'Wybierz apartament i podaj daty!')
 
+        self.dane = api.get(
+            'Apartament',
+            filters={
+                'id': apartment
+            },
+            include=[
+                'opis'
+            ]
+        )
+
         try:
             reservation = api.create(
                 'RezerwacjeApartamentow',
@@ -102,42 +115,30 @@ class ApartmentReservePage(BaseFrame):
                                          'prawidłowo wprowadzone.')
             return
 
-        # try:
-        #
-        #     old_apartment = api.get(
-        #         'Apartament',
-        #         filters={
-        #             "id": apartment
-        #         },
-        #         include={
-        #             'OpisApartamentu':{
-        #                     'type': 'OpisApartamentu',
-        #                     'id': ['id']
-        #                 }
-        #         })
-        #     messagebox.showinfo('Error', f'Opis id: {old_apartment["id"]}')
-        #
-        #     api.update(
-        #         'Apartament',
-        #         attributes={
-        #             "zajety": True
-        #         },
-        #         relationships={
-        #             'opis': {
-        #                 'type': 'OpisApartamentu',
-        #                 'id': old_apartment['id']
-        #             }
-        #         },
-        #         _id=apartment
-        #     )
-        # except Exception:
-        #     api.delete('RezerwacjeApartamentow', _id=reservation['id'])
-        #     messagebox.showinfo('Error', 'Nie można stawić apartamentu na zajęty! '
-        #                                  'Sprawdź czy wszystkie dane (np. daty) zostały '
-        #                                  'prawidłowo wprowadzone.')
-        #     return
+        try:
 
-        messagebox.showinfo('Error', f'Dodano nową rezerwację od: {reservation["data_wynajecia"]}')
+            api.update(
+                'Apartament',
+                attributes={
+                    "zajety": True
+                },
+                relationships={
+                    'opis': {
+                        'type': 'OpisApartamentu',
+                        'id': self.dane[0]['opis']['id']
+                    }
+                },
+                _id=apartment
+            )
+        except Exception:
+            api.delete('RezerwacjeApartamentow', _id=reservation['id'])
+            messagebox.showinfo('Error', 'Nie można ustawić apartamentu na zajęty! '
+                                         'Sprawdź czy wszystkie dane (np. daty) zostały '
+                                         'prawidłowo wprowadzone.')
+            return
+
+        messagebox.showinfo('Error', f'Dodano nową rezerwację od: {reservation["data_wynajecia"]}\n'
+                                     f'Ustawiono apartament na zajęty.')
 
     def tohome(self):
         self.controller.show_frame(frames.KlientPage)

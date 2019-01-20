@@ -15,6 +15,8 @@ class PracownikChangePage(BaseFrame):
         self.label = tk.Label(self)
         self.label.pack(pady=10, padx=10)
 
+        self.dane = []
+
         self.password_label = tk.Label(self)
         self.password_input = tk.Entry(self, show="*")
         self.password_label2 = tk.Label(self)
@@ -111,6 +113,11 @@ class PracownikChangePage(BaseFrame):
             messagebox.showinfo('Error', 'Ptrzebujemy Twoich danych kontaktowych! '
                                          'Podaj swój adres email, adres zamieszkania i numer karty.')
             return
+
+        if password1 == self.dane[0]['dane_logowania']['haslo'] and (name == self.dane[0]['imie'])and (lastname == self.dane[0]['nazwisko']):
+            if (email == self.dane[0]['dane_logowania']['email']) and (money == self.dane[0]['wyplata']) and (address == self.dane[0]['adres']):
+                messagebox.showinfo('Error', 'Nie wprowadzono żadnych zmian! ')
+                return
 
         try:
             api.update(

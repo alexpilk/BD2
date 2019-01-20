@@ -30,12 +30,14 @@ class LoginPage(BaseFrame):
         self.login_button.pack()
         self.register_button.pack()
 
+        self.controller.config(menu=tk.NONE)
+
         self.username_input.delete(0, tk.END)
         self.password_input.delete(0, tk.END)
-        # self.password_input.insert(0, "MariahCarey1")
-        # self.username_input.insert(0, "MariahCarey")
-        self.username_input.insert(0, "BilboBaggins")
-        self.password_input.insert(0, "BilboBaggins1")
+        self.password_input.insert(0, "MariahCarey1")
+        self.username_input.insert(0, "MariahCarey")
+        # self.username_input.insert(0, "BilboBaggins")
+        # self.password_input.insert(0, "BilboBaggins1")
         super().tkraise()
 
     def log_in(self):

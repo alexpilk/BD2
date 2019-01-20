@@ -50,7 +50,7 @@ class AddApartmentDescription(BaseFrame):
         self.price_input = tk.Entry(self)
 
         self.add_button = tk.Button(self, text="Dodaj opis", command=self.add_desc)
-        self.return_button = tk.Button(self, text="Wróć do dodawania apartamentu", command=self.tohome)
+        self.return_button = tk.Button(self, text="Wróć do strony głównej", command=self.tohome)
 
     def tkraise(self, *args, **kwargs):
         self.label.config(text="Dodawanie nowego opisu apartamentu:")
@@ -114,5 +114,5 @@ class AddApartmentDescription(BaseFrame):
         messagebox.showinfo('Info', f'Utworzono nowy: {(new_descript["verbose_name"])}.')
 
     def tohome(self):
-        self.controller.show_frame(frames.ApartmentAddPage)
+        self.controller.show_frame(frames.PracownikPage)
 

@@ -11,27 +11,36 @@ class PracownikPage(BaseFrame):
         self.label = tk.Label(self)
         self.label.pack(pady=10, padx=10)
 
-        self.add_button = tk.Button(self, text="Dodaj pracownika", command=self.addworker)
-        self.add_client_button = tk.Button(self, text="Dodaj klienta", command=self.addclient)
-        self.add_apartment_button = tk.Button(self, text="Dodaj apartament", command=self.addapartment)
-        self.add_item_button = tk.Button(self, text="Dodaj sprzęt", command=self.additem)
-        self.change_button = tk.Button(self, text="Zmien swoje dane", command=self.change_info)
-        self.logout_button = tk.Button(self, text="Wyloguj", command=self.logout)
+        self.return_item_button = tk.Button(self, text="Zwróć sprzęt", command=self.return_item)
+        self.return_app_button = tk.Button(self, text="Wymelduj gościa", command=self.return_app)
+
+        self.menubar = tk.Menu(self.controller)
+        self.danemenu = tk.Menu(self.menubar, tearoff=0)
+        self.danemenu.add_command(label="Zmień swoje dane", command=self.change_info)
+        self.danemenu.add_command(label="Dodaj klienta", command=self.addclient)
+        self.danemenu.add_command(label="Dodaj pracownika", command=self.addworker)
+
+        self.appManagemenu = tk.Menu(self.menubar, tearoff=0)
+        self.appManagemenu.add_command(label="Dodaj apartament", command=self.addapartment)
+        self.appManagemenu.add_command(label="Dodaj opis apartamentu", command=self.add_app_desription)
+
+        self.itemManagemenu = tk.Menu(self.menubar, tearoff=0)
+        self.itemManagemenu.add_command(label="Dodaj sprzęt", command=self.additem)
+        self.itemManagemenu.add_command(label="Dodaj opis sprzętu", command=self.add_item_desription)
+
+        self.menubar.add_cascade(label="Apartamenty", menu=self.appManagemenu)
+        self.menubar.add_cascade(label="Sprzęt", menu=self.itemManagemenu)
+        self.menubar.add_cascade(label="Użytkownicy", menu=self.danemenu)
+        self.menubar.add_command(label="O programie", command=self.program_info)
+        self.menubar.add_command(label="Wyloguj", command=self.logout)
 
     def tkraise(self, *args, **kwargs):
         self.label.config(text=f"Witamy na stronie pracownika, {self.controller.user_data['imie']}")
-        self.add_button.config(bg='ghost white')
-        self.add_client_button.config(bg='ghost white')
-        self.add_apartment_button.config(bg='ghost white')
-        self.add_item_button.config(bg='ghost white')
-        self.logout_button.config(bg='ghost white')
-        self.change_button.config(bg='ghost white')
-        self.add_button.pack()
-        self.add_client_button.pack()
-        self.add_apartment_button.pack()
-        self.add_item_button.pack()
-        self.change_button.pack()
-        self.logout_button.pack()
+        self.return_item_button.config(bg='ghost white')
+        self.return_item_button.pack()
+        self.return_app_button.config(bg='ghost white')
+        self.return_app_button.pack()
+        self.controller.config(menu=self.menubar)
         super().tkraise()
 
     def addworker(self):
@@ -43,8 +52,20 @@ class PracownikPage(BaseFrame):
     def addapartment(self):
         self.controller.show_frame(frames.ApartmentAddPage)
 
+    def add_app_desription(self):
+        self.controller.show_frame(frames.AddApartmentDescription)
+
+    def add_item_desription(self):
+        self.controller.show_frame(frames.AddItemDescription)
+
     def additem(self):
         self.controller.show_frame(frames.ItemAddPage)
+
+    def return_item(self):
+        self.controller.show_frame(frames.ItemReturnPage)
+
+    def return_app(self):
+        self.controller.show_frame(frames.AppReturnPage)
 
     def change_info(self):
         self.controller.show_frame(frames.PracownikChangePage)
@@ -52,6 +73,10 @@ class PracownikPage(BaseFrame):
     def logout(self):
         self.controller.set_user(0)
         self.controller.show_frame(frames.LoginPage)
+
+    def program_info(self):
+        messagebox.showinfo('Informacje o programie', self.controller.info_o_programie)
+
 
 
 
