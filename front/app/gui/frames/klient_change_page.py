@@ -53,7 +53,7 @@ class KlientChangePage(BaseFrame):
         self.return_button.pack()
 
     def tkraise(self, *args, **kwargs):
-        self.label.config(text=f"Zmiana danych osobowych:")
+        self.label.config(text=f"Zmiana danych osobowych")
         self.password_label.config(text="Hasło:")
         self.password_label2.config(text="Powtórz hasło:")
         self.name_label.config(text="Imię:")
