@@ -50,8 +50,7 @@ class ItemReturnPage(BaseFrame):
             }
         )
 
-        for i in range(len(self.reservations_get)):
-            self.elements.append(self.reservations_get[i]['verbose_name'])
+        self.elements = [reservation['verbose_name'] for reservation in self.reservations_get]
 
         for item in self.elements:
             self.reservation_list.insert(tk.END, item)
