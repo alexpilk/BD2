@@ -90,6 +90,10 @@ class AddApartmentDescription(BaseFrame):
             messagebox.showinfo('Error', 'Podaj rodzaj, lokalizację i cenę!')
             return
 
+        if (aptype == '---') or (location == '---'):
+            messagebox.showinfo('Error', 'Podaj rodzaj i lokalizację!')
+            return
+
         try:
             new_descript = api.create(
                 'OpisApartamentu',
@@ -107,8 +111,8 @@ class AddApartmentDescription(BaseFrame):
                     }
                 })
         except Exception:
-            messagebox.showinfo('Error', 'Nie można utworzyć opisu apartamentu! '
-                                         'Sprawdź czy wszystkie dane zostały '
+            messagebox.showinfo('Error', 'Nie można utworzyć opisu apartamentu!\n'
+                                         'Sprawdź czy wszystkie dane zostały\n'
                                          'prawidłowo wprowadzone.')
             return
         messagebox.showinfo('Info', f'Utworzono nowy: {(new_descript["verbose_name"])}.')

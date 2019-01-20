@@ -40,7 +40,6 @@ class ItemAddPage(BaseFrame):
         self.checkdate_label = tk.Label(self)
         self.callendar_box = tkcalendar.Calendar(self)
 
-        self.add_descr_button = tk.Button(self, text="Dodaj nowy opis sprzętu", command=self.add_desription)
         self.add_button = tk.Button(self, text="Dodaj nowy sprzęt", command=self.add_item)
         self.return_button = tk.Button(self, text="Wróć do strony pracownika", command=self.tohome)
 
@@ -52,7 +51,6 @@ class ItemAddPage(BaseFrame):
         self.status_label.config(text="Status:")
         self.add_button.config(bg='ghost white')
         self.return_button.config(bg='ghost white')
-        self.add_descr_button.config(bg='ghost white')
 
         self.opis.set("---")
         self.status.set("---")
@@ -67,7 +65,6 @@ class ItemAddPage(BaseFrame):
 
         self.status_label.pack()
         self.status_list.pack()
-        self.add_descr_button.pack()
         self.add_button.pack()
         self.return_button.pack()
         super().tkraise()
@@ -85,7 +82,7 @@ class ItemAddPage(BaseFrame):
             messagebox.showinfo('Error', 'Podaj dane sprzętu!')
             return
 
-        if status == 'wolny':
+        if status == 'Wolny':
             try:
                 item = api.create(
                     'Sprzet',
@@ -101,11 +98,11 @@ class ItemAddPage(BaseFrame):
                         }
                     })
             except Exception:
-                messagebox.showinfo('Error', 'Nie można utworzyć wolnego sprzętu! '
-                                             'Sprawdź czy wszystkie dane zostały '
+                messagebox.showinfo('Error', 'Nie można utworzyć wolnego sprzętu!\n'
+                                             'Sprawdź czy wszystkie dane zostały\n'
                                              'prawidłowo wprowadzone.')
                 return
-        else:
+        elif status == 'Zajęty':
             try:
                 item = api.create(
                     'Sprzet',
@@ -121,14 +118,14 @@ class ItemAddPage(BaseFrame):
                         }
                     })
             except Exception:
-                messagebox.showinfo('Error', 'Nie można utworzyć zajętego sprzętu! '
-                                             'Sprawdź czy wszystkie dane zostały '
+                messagebox.showinfo('Error', 'Nie można utworzyć zajętego sprzętu!\n'
+                                             'Sprawdź czy wszystkie dane zostały\n'
                                              'prawidłowo wprowadzone.')
                 return
+        else:
+            messagebox.showinfo('Error', 'Wprowadź stan sprzętu!')
+            return
         messagebox.showinfo('Info', f'Utworzono nowy: {item["verbose_name"]}.')
-
-    def add_desription(self):
-        self.controller.show_frame(frames.AddItemDescription)
 
     def tohome(self):
         self.controller.show_frame(frames.PracownikPage)

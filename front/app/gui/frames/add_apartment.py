@@ -59,11 +59,11 @@ class ApartmentAddPage(BaseFrame):
                 description = self.descriptions_get[item]['id']
         status = self.status.get()
 
-        if not description or not status:
+        if not description or not status or (status == "---"):
             messagebox.showinfo('Error', 'Podaj opis i status!')
             return
 
-        if status == 'wolny':
+        if status == 'Wolny':
             try:
                 apartment = api.create(
                     'Apartament',
@@ -77,11 +77,11 @@ class ApartmentAddPage(BaseFrame):
                         }
                     })
             except Exception:
-                messagebox.showinfo('Error', 'Nie można utworzyć wolnego apartamentu! '
-                                             'Sprawdź czy wszystkie dane zostały '
+                messagebox.showinfo('Error', 'Nie można utworzyć wolnego apartamentu!\n'
+                                             'Sprawdź czy wszystkie dane zostałyn\n'
                                              'prawidłowo wprowadzone.')
                 return
-        else:
+        elif status == 'Zajęty':
             try:
                 apartment = api.create(
                     'Apartament',
@@ -95,10 +95,15 @@ class ApartmentAddPage(BaseFrame):
                         }
                     })
             except Exception:
-                messagebox.showinfo('Error', 'Nie można utworzyć zajętego apartamentu! '
-                                             'Sprawdź czy wszystkie dane zostały '
+                messagebox.showinfo('Error', 'Nie można utworzyć zajętego apartamentu!\n'
+                                             'Sprawdź czy wszystkie dane zostałyn\n'
                                              'prawidłowo wprowadzone.')
                 return
+        else:
+            messagebox.showinfo('Error', 'Nie można utworzyć apartamentu!\n'
+                                         'Sprawdź czy wszystkie dane zostały\n'
+                                         'prawidłowo wprowadzone.')
+            return
         messagebox.showinfo('Info', f'Utworzono nowy: {(apartment["verbose_name"])}.')
 
     def tohome(self):

@@ -121,6 +121,10 @@ class KlientChangePage(BaseFrame):
                 messagebox.showinfo('Error', 'Nie wprowadzono żadnych zmian! ')
                 return
 
+        if not (len(card) == 19) or not (card[4] == ' ') or not (card[9] == ' ') or not (card[14] == ' '):
+            messagebox.showinfo('Error', 'Podano nieprawidłowy numer karty!')
+            return
+
         try:
             api.update(
                 'DaneLogowania',
@@ -135,24 +139,29 @@ class KlientChangePage(BaseFrame):
             messagebox.showinfo('Error', 'Taki adres email nie ma prawa istnieć!.')
             self.register_button.config(bg='ghost white')
             return
-
-        api.update(
-            'Klient',
-            attributes=
-            {
-                "imie": name,
-                "nazwisko": lastname,
-                "adres": address,
-                "numer_karty": card
-            },
-            relationships={
-                'dane_logowania': {
-                    'type': 'DaneLogowania',
-                    'id': self.dane[0]['dane_logowania']['login']
-                }
-            },
-            _id=self.dane[0]['id']
-        )
+        try:
+           api.update(
+               'Klient',
+               attributes=
+               {
+                   "imie": name,
+                   "nazwisko": lastname,
+                   "adres": address,
+                   "numer_karty": card
+               },
+               relationships={
+                   'dane_logowania': {
+                       'type': 'DaneLogowania',
+                       'id': self.dane[0]['dane_logowania']['login']
+                   }
+               },
+               _id=self.dane[0]['id']
+           )
+        except Exception:
+            messagebox.showinfo('Error', 'Nie udało się zaktualizować danych!\n'
+                                         'Sprawdź, czy wszystkie wartości są\n'
+                                         'prawidłowo wprowadzone.')
+            return
 
         klient = api.get('Klient', filters={
             'dane_logowania.login': self.dane[0]['dane_logowania']['login']

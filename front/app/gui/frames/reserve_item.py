@@ -55,11 +55,9 @@ class ItemReservePage(BaseFrame):
         self.item_list.activate(0)
         self.item_list.selection_set(0, 0)
         self.start_date_input.delete(0, tk.END)
-        # self.start_date_input.insert(0, "yyyy-mm-dd")
-        self.start_date_input.insert(0, "2019-07-03")
+        self.start_date_input.insert(0, "yyyy-mm-dd")
         self.end_date_input.delete(0, tk.END)
-        # self.end_date_input.insert(0, "yyy-mm-dd")
-        self.end_date_input.insert(0, "2019-07-11")
+        self.end_date_input.insert(0, "yyyy-mm-dd")
 
         self.start_date_label.pack()
         self.start_date_input.pack()

@@ -106,11 +106,11 @@ class PracownikChangePage(BaseFrame):
             messagebox.showinfo('Error', 'Podano dwa różne hasła!')
             return
         if not name or not lastname:
-            messagebox.showinfo('Error', 'Potrzebujemy Twoich danych osobowych! '
+            messagebox.showinfo('Error', 'Potrzebujemy Twoich danych osobowych!\n'
                                          'Podaj imię i nazwisko.')
             return
         if not email or not address or not money:
-            messagebox.showinfo('Error', 'Ptrzebujemy Twoich danych kontaktowych! '
+            messagebox.showinfo('Error', 'Ptrzebujemy Twoich danych kontaktowych!\n'
                                          'Podaj swój adres email, adres zamieszkania i numer karty.')
             return
 
@@ -133,23 +133,28 @@ class PracownikChangePage(BaseFrame):
             messagebox.showinfo('Error', 'Taki adres email nie ma prawa istnieć!.')
             return
 
-        api.update(
-            'Pracownik',
-            attributes=
-            {
-                "imie": name,
-                "nazwisko": lastname,
-                "adres": address,
-                "numer_karty": money
-            },
-            relationships={
-                'dane_logowania': {
-                    'type': 'DaneLogowania',
-                    'id': self.dane[0]['dane_logowania']['login']
-                }
-            },
-            _id=self.dane[0]['id']
-        )
+        try:
+           api.update(
+               'Pracownik',
+               attributes=
+               {
+                   "imie": name,
+                   "nazwisko": lastname,
+                   "adres": address,
+                   "wyplata": money
+               },
+               relationships={
+                   'dane_logowania': {
+                       'type': 'DaneLogowania',
+                       'id': self.dane[0]['dane_logowania']['login']
+                   }
+               },
+               _id=self.dane[0]['id']
+           )
+        except Exception:
+            messagebox.showinfo('Error', 'Nie udało sie zmienić danych!\n'
+                                         'Sprawdź, czy wszystkie dane są wpisane prawodłowo.')
+            return
 
         pracownik = api.get('Pracownik', filters={
             'dane_logowania.login': self.dane[0]['dane_logowania']['login']

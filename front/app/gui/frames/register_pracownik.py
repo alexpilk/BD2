@@ -118,7 +118,7 @@ class RegisterPrac(BaseFrame):
             self.register_button.config(bg='ghost white')
             return
         if not name or not lastname:
-            messagebox.showinfo('Error', 'Nie podano danych osobowych pracownika! '
+            messagebox.showinfo('Error', 'Nie podano danych osobowych pracownika!\n'
                                          'Podaj imię i nazwisko.')
             return
         if not email or not address:
@@ -175,8 +175,8 @@ class RegisterPrac(BaseFrame):
                     }
                 })
         except Exception:
-            messagebox.showinfo('Error', 'Nie można utworzyć konta pracownika! '
-                                         'Sprawdź czy wszystkie dane zostały '
+            messagebox.showinfo('Error', 'Nie można utworzyć konta pracownika!\n'
+                                         'Sprawdź czy wszystkie dane zostały\n'
                                          'prawidłowo wprowadzone.')
             api.delete('DaneLogowania', _id=dane_logowania['id'])
             return

@@ -87,7 +87,11 @@ class AddItemDescription(BaseFrame):
                 mark = self.mark_get[item]['id']
 
         if not ittype or not mark or not price:
-            messagebox.showinfo('Error', 'Podaj rodzaj, lokalizację i cenę!')
+            messagebox.showinfo('Error', 'Podaj rodzaj, producenta i cenę!')
+            return
+
+        if (ittype == '---') or (mark == '---'):
+            messagebox.showinfo('Error', 'Podaj rodzaj i producenta!')
             return
 
         try:
@@ -98,17 +102,17 @@ class AddItemDescription(BaseFrame):
                 },
                 relationships={
                     'rodzaj': {
-                        'type': 'RodzajApartamentu',
+                        'type': 'RodzajSprzetu',
                         'id': ittype
                     },
                     'producent': {
-                        'type': 'Lokalizacja',
+                        'type': 'Producent',
                         'id': mark
                     }
                 })
         except Exception:
-            messagebox.showinfo('Error', 'Nie można utworzyć opisu sprzętu! '
-                                         'Sprawdź czy wszystkie dane zostały '
+            messagebox.showinfo('Error', 'Nie można utworzyć opisu sprzętu!\n'
+                                         'Sprawdź czy wszystkie dane zostały\n'
                                          'prawidłowo wprowadzone.')
             return
         messagebox.showinfo('Info', f'Utworzono nowy: {(new_descript["verbose_name"])}.')

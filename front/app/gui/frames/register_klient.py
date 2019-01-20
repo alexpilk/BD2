@@ -74,6 +74,7 @@ class RegisterKli(BaseFrame):
         self.lastname_input.delete(0, tk.END)
         self.email_input.delete(0, tk.END)
         self.card_input.delete(0, tk.END)
+        self.card_input.insert(0, 'xxxx xxxx xxxx xxxx')
         self.address_input.delete(0, tk.END)
         super().tkraise()
 
@@ -98,14 +99,18 @@ class RegisterKli(BaseFrame):
             self.register_button.config(bg='ghost white')
             return
         if not name or not lastname:
-            messagebox.showinfo('Error', 'Potrzebujemy Twoich danych osobowych! '
+            messagebox.showinfo('Error', 'Potrzebujemy Twoich danych osobowych!\n'
                                          'Podaj imię i nazwisko.')
             self.register_button.config(bg='ghost white')
             return
         if not email or not address or not card:
-            messagebox.showinfo('Error', 'Ptrzebujemy Twoich danych kontaktowych! '
+            messagebox.showinfo('Error', 'Potrzebujemy Twoich danych kontaktowych!\n'
                                          'Podaj swój adres email, adres zamieszkania i numer karty.')
             self.register_button.config(bg='ghost white')
+            return
+
+        if not (len(card) == 19) or not (card[4] == ' ') or not (card[9] == ' ') or not (card[14] == ' '):
+            messagebox.showinfo('Error', 'Podano nieprawidłowy numer karty!')
             return
 
         login_data = api.get('DaneLogowania', filters={
@@ -131,21 +136,27 @@ class RegisterKli(BaseFrame):
             self.register_button.config(bg='ghost white')
             return
 
-        api.create(
-            'Klient',
-            attributes=
-            {
-                "imie": name,
-                "nazwisko": lastname,
-                "adres": address,
-                "numer_karty": card
-            },
-            relationships={
-                'dane_logowania': {
-                    'type': 'DaneLogowania',
-                    'id': username
-                }
-            })
+        try:
+              api.create(
+              'Klient',
+              attributes=
+              {
+                  "imie": name,
+                  "nazwisko": lastname,
+                  "adres": address,
+                  "numer_karty": card
+              },
+              relationships={
+                  'dane_logowania': {
+                      'type': 'DaneLogowania',
+                      'id': username
+                  }
+              })
+        except Exception:
+            messagebox.showinfo('Error', 'Nie udało się utworzyć konta klienta!\n'
+                                         'Sprawdź, czy wszystkie wartości są\n'
+                                         'prawidłowo wprowadzone.')
+            return
 
         klient = api.get('Klient', filters={
             'dane_logowania.login': username
