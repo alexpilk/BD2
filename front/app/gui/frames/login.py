@@ -16,13 +16,13 @@ class LoginPage(BaseFrame):
     def __init__(self, parent, controller):
         super().__init__(parent, controller)
 
-        label = tk.Label(self, text="Start Page")
+        label = tk.Label(self, text="Witamy!\n\nZaloguj się aby kontynuować")
         label.pack(pady=10, padx=10)
 
         self.username_input = tk.Entry(self)
         self.password_input = tk.Entry(self, show="*")
-        self.login_button = tk.Button(self, text="Login", command=self.log_in)
-        self.register_button = tk.Button(self, text="Register", command=self.register)
+        self.login_button = tk.Button(self, text="Zaloguj", command=self.log_in)
+        self.register_button = tk.Button(self, text="Zarejestruj się", command=self.register)
 
     def tkraise(self, *args, **kwargs):
         self.username_input.pack()
